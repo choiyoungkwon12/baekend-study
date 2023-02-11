@@ -51,4 +51,4 @@ URL은 주소이지 실제 이름이 아니다.
 
 uri, url, urn을 잘 나타낸 다이어그램
 
-![img.png](img.png)image.png
+![img.png](img.png)

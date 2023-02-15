@@ -17,3 +17,4 @@
 
 ## DTO & JSON & CORS
 * [DTO](dto/dto.md)
+* [serialization](serialization/serialization.md)

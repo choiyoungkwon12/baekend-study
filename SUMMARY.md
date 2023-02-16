@@ -19,3 +19,4 @@
 * [DTO](dto/dto.md)
 * [serialization](serialization/serialization.md)
 * [cors](CORS/cors.md)
+* [jackson](jackson/jackson.md)

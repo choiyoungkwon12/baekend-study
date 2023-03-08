@@ -34,8 +34,23 @@
 크게 기능과 웹으로 나눌 수 있고, 기능 -> 비즈니스 로직, 웹과 같은 형태를 UI라고 부를 수 있음.
 웹은 UI Layer에서 다루고, Controller를 통해 요청을 받을 수 있도록 한다.
 
+### Service
+
+- [Presentation Domain Data Layering](https://martinfowler.com/bliki/PresentationDomainDataLayering.html)
+
+리팩토링 : 소프트웨어의 겉보기 동작은 그대로 유지한 채, 여러가지 리팩터링 기법을 적용해서 소프트웨어를 재구성하는것.
+
+관심사의 분리에 따라서 코드도 분리. 코드를 어떻게 배치하느냐 = 설계. 설계를 개선 = 리팩터링.
+
+각 기능을 개별 메서드로 분리하고, 이를 모아서 PostService 클래스로 모아주고, 다시 application 패키지로 옮긴다.
+
+
 # Data Access
-- 
+
+Layered Architecture 에서는 각 레이어 별 관심사를 분리하고, 그 중 Data Access Layer는 DB의 접근과 같은 역할을 담당하는 레이어.
+
+- DB에 대한 접근을 관리하는 레이어(Data Access 레이어) 위해 사용하는 객체 = Data Access Object
+
 
 # Domain Model
 - 

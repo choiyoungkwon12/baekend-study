@@ -61,4 +61,49 @@ Entity-Relationship Model(ERM)과 Relational Model(RM)
 
 관계는 대부분 Table로 구현되고, 속성 집합을 Schema라고 표현한다.
 
+# Relational Algerbra (관계 대수)
+
+### 연산
+- 하나 이상의 Relation으로 새로운 Relation을 만들 수 있음.
+  - ex) Projection 과 같이 조회할때 원하는 Attribute을 가져오는 것도 하나의 새로운 Relation을 만드는 것이다.
+
+### Projection
+- 원하는 Attribute을 포함하는 Pair로 Tuple을 구성하는것.
+```sql
+SELECT name, age, gender
+FROM people;
+```
+그냥 sql에서는 원하는 속성을 가져오는것으로 표현
+
+### Selection
+주어진 술어(조건)을 만족하는 Tuple만 선택
+sql에서는 where로 표현
+```sql
+SELECT name, age, gender
+FROM people
+WHERE age < 13;
+```
+
+### Cartesian Product
+
+Relation의 Cartesian Product는 원래 의미와 다르다. 
+원래는 각 요소의 쌍을 요소로 취하지만(x와 y가 있다면 (x, y)를 새로운 요소로 사용), 관계 대수에서는 그냥 Tuple을 합친다.
+
+![img_1.png](img_1.png)
+
+- 대부분은 Cartesian Product를 그대로 사용하지 않고 Selection과 함께 사용하는데, 이를 Join이라고 한다.
+- 보통 Cartesian Product은 조인으로 사용함.
+```
+σpeople.name = items.person_name(people × items)
+σ = Selection
+× = Cartesian Product
+```
+```
+SELECT items.name AS name, usage, people.gender
+FROM items
+JOIN people ON items.person_name = people.name;
+```
+
+
+
 

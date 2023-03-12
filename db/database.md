@@ -122,4 +122,30 @@ Entity는 개별적으로 다룰 수 있는 데이터이고, ER 모델에서 Rel
 - 도구나 표기법에 집착x, 모델을 검증하고 엔티티를 발견하고 적절하게 재배치하는것에 집중하면 많은 통찰력을 얻을 수 있다.
 - 마름모로 표시되는 Relationship을 생략하지 말고 "읽을 수 있도록 말이 되는 설계"를 하면 도움이 됨.
 
+# JDBC (Java Database Connectivity)
+- java에서 RDBMS를 사용할 수 있게 해주는 API
+- API는 그냥 인터페이스기 때문에 각 DBMS 벤더에서 제공하는 JDBC Driver가 필요하다.
+
+```
+implementation 'org.postgresql:postgresql:42.5.4'
+```
+약간 로우한 방법을 통한 쿼리를 하는 방법 벤더에 맞는 JDBC 추가 후 Connection 얻고 statement를 통해 원하는 쿼리를 하고 ResultSet을 통해 결과를 받아옴.
+
+Statement와 PreparedStatement의 차이점
+
+`가장 큰 차이점은 캐시 사용 여부이다.`
+
+- Statement는 쿼리를 실행하기 전에 문자열로 작성된 SQL 쿼리를 DBMS에 보내는 데 사용됨. 
+
+쿼리를 실행할 때마다 새로운 SQL문을 작성하고 컴파일해야 합니다. 이로 인해 동일한 쿼리를 여러 번 실행할 때 성능이 떨어질 수 있습니다.
+
+- PreparedStatement는 SQL 문을 미리 컴파일하여 쿼리의 일부 또는 전체를 매개 변수화할 수 있습니다.
+
+이 매개 변수는 쿼리 실행 시에만 설정됩니다. 따라서 매번 SQL문을 컴파일할 필요가 없어져 성능이 향상됩니다. 
+
+또한, PreparedStatement를 사용하면 SQL 쿼리의 구문 검사가 더욱 엄격하게 이루어지기 때문에 SQL Injection 공격을 예방할 수 있습니다.
+
+따라서, PreparedStatement는 Statement보다 더 나은 성능과 보안을 제공합니다. 
+
+
 

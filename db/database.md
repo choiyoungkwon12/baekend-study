@@ -104,6 +104,22 @@ FROM items
 JOIN people ON items.person_name = people.name;
 ```
 
+## Entity-Relationship Model (개체 관계 모델)
 
+Entity는 개별적으로 다룰 수 있는 데이터이고, ER 모델에서 Relationship은 Entity 사이의 관계를 의미하고, 개념적 데이터 모델이다.
+같은 Attribute를 가진 Entity를 Entity Type이라고 하며, ERD등을 그릴때 사용하는 것은 Entity Type이다.
+- 참고로, OOP, DDD에서 Entity를 연속성과 식별성이 있는 객체란 의미로 사용한다. 
+- 똑같이 Entity란 표현을 사용하지만 실제로는 완전히 다른 의미이다.(ER모델에서의 엔티티는 데이터이고 행위가 없음, OOP, Jpa에서 사용되는 Entity는 행위가 있을 수 있음.)
+  - 데이터 모델링과 객체 모델링은 목표, 용어, 원칙등도 다르니 다르다는것에 유의하자.
+
+=> 같은 단어라도 문맥에 따라서 다른 의미인 경우가 매우 많으니 아는 단어 나왔다고 넘겨짚지말고 잘 파악해서 이해하도록 하자.
+
+### ERD (Entity-Relationship Diagram)
+[ER Diagram MMORPG](https://commons.wikimedia.org/wiki/File:ER_Diagram_MMORPG.png)
+[Cardinality (data modeling)](https://en.wikipedia.org/wiki/Cardinality_(data_modeling))
+- 개념적 데이터 모델인 ER모델을 시각화하는 방법으로 논리적 설계에 들어가기 전에 그려보면 도움이 됨.
+  - 도구나 표기법에 집착하지말고, 모델을 검증하는 도구로 사용하자.
+- 도구나 표기법에 집착x, 모델을 검증하고 엔티티를 발견하고 적절하게 재배치하는것에 집중하면 많은 통찰력을 얻을 수 있다.
+- 마름모로 표시되는 Relationship을 생략하지 말고 "읽을 수 있도록 말이 되는 설계"를 하면 도움이 됨.
 
 

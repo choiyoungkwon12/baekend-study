@@ -27,3 +27,9 @@
 ## DB
 * [DB](db/database.md)
 
+## JPA
+* [JPA](jpa/jpa.md)
+* [ORM](jpa/ORM.md)
+
+## DDD
+* [DDD](DDD/DDD.md)

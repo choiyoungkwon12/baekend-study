@@ -106,4 +106,72 @@ DDD를 Microservices를 위한 수단 정도로 여기고 학습하는 경우가
   - 또한, 예측 가능성을 높이고, 혼란을 막기 위해 가능하면 불변객체로 만들어 줘야한다. (ex. final or record)
   
 
+## 집합체 (Aggregate)
+- 실제로 사용하게되고, 집중해야 될 것이 Aggregate다.
+  - Entity와 Value Object는 도메인 모델, 도메인 객체가 맞지만, 바로 Entity와 Value Object를 사용하지 않을 것이다.
+    - ex. 타이어와 엔진을 사용하지 않고, 자동차라는 집합체를 사용하는 것과 같다.
 
+- Aggregate 는 불변식(Invariant)를 유지하고 여러 도메인을 사용하기 좋게 만들어준다.
+  - 사방에서 개별 객체에 접근함으로써 불변식(무결성)을 깨뜨리고 일관성을 파괴하는 일이 없도록 지켜주면서 우리가 다뤄야 할 도메인 객체의 갯수를 적절하게 조절해 준다.
+    - ex. 도메인 객체가 1000개라면 Aggregate가 도메인을 10개씩 가지고 있다면 Aggregate 100개만 다루면 되고, 가지고 있는 도메인이 더 많다면, 더 적은 Aggregate를 다루면 된다. 
+  - 자동차 부품을 모두 직접 접근하는것과 자동차라는 단위로 접근하는 것은 차원이 다른 이야기임.
+
+- 불변식은 우리가 지켜야 할 제약조건, 규칙 이라고 할 수 있음.
+  - 에릭 에반스는 주문 예제를 예로 들어 설명하는데, Order는 여러 Line Item을 포함하고, 총 주문액이 10만원이 넘지 않는다는 불변식이 있다고 하자.
+
+```
+Order
+- LineItem
+  - Identifier : item-1
+  - Product : mac
+  - quantity : 1
+  - price : 30000
+- LineItem
+  - Identifier : item-2
+  - Product : book
+  - quantity : 1
+  - price : 20000
+```
+
+만약 개별로 접근이 가능하다고 한다면 item-1에서 봤을때는 현재 5만원이 여유가 있으니, mac 1개를 더 구입해도 된다고 생각할 수 있다.
+item-2 관점에서 볼때도 5만원이 여유가 있으니 book 2개를 더 구입해도 된다고 생각할 수 있다.
+=> 하지만, 결과적으로 같이 놓고 본다면 item-1 => 6만원, item-2 => 6만원으로 총 10만원으로 불변식이 깨질 수가 있다.
+
+- 그래서 Order라는 Entity를 Order라는 Aggregate의 Root로 삼고, 하나의 객체에 동시에 접근할 수 없는 제약을 통해(일반적으로 트랜젝셩을 통해 달성가능) 불변식을 지킬 수 있음.
+  - Aggregate가 하나의 Entity가 되는것처럼 보여짐
+  - 이렇게 했을떄, 불변식을 지키는 장점도 있고, `Aggregate가 제공하는 적절한 인터페이스를 통해 더 나은 표현을 할 수도 있다.`
+
+Line Item에 개별적으로 접근하는 경우:
+
+```
+LineItem lineItem = lineItemRepository.findById("item-234").get();
+lineItem.changeQuantity(2);
+
+LineItem lineItem = lineItemRepository.findById("item-345").get();
+lineItem.changeQuantity(3);
+```
+
+Aggregate를 사용하는 경우:
+```
+Order order = orderRepository.findById("order-123").get();
+order.changeItemQuantity("item-234", 2);
+order.changeItemQuantity("item-345", 3);
+```
+
+Aggregate의 동작에 집중한 경우:
+```
+Order order = orderRepository.findById("order-123").get();
+order.addItem("Guitar", 1);
+order.addItem("Microphone", 2);
+```
+
+- 마지막 코드에서처럼 Aggregate를 통해 OOP에서 말하는 협력하는 객체를 더 잘 구성할 수 있게 된다.
+  - 원하는 행동에 대한 의도를 더욱 잘 나타낼 수 있다.
+- 책임, 위임, 괌심사의 분리등의 주제를 이를 통해 고민하고 적용할 수 있다.
+
+IDDD 저자인 Vaughn Vernon은 4가지 경험을 제공한다고 함.
+- 불변식을 통해 일관성 경계를 찾아서 모델링한다. Aggregate는 트랜잭션적 일관성 경계와 동일하다.
+  - 도메인에 대한 이해를 바탕으로 불변식을 통해 모델링을 하고, 도메인이 크게 바뀐다면 불변식도 변경될 수 있음.
+- 작은 Aggregate 로 설계한다.
+- ID 로 다른 Aggregate 를 참조한다. Jpa 등을 사용하면 관련된 객체를 모두 참조할 수 있지만, 그렇게 하지 않고 경계 안에서만 직접 참조를 하고, 경계 밖에서는 ID를 통해 다른 Aggregate 를 참조하여 접근한다.
+- 경계 밖에서 결과적 일관성을 사용한다. 이를 위해 도메인 이벤트 등을 사용할 수 있다.

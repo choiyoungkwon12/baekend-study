@@ -175,3 +175,29 @@ IDDD 저자인 Vaughn Vernon은 4가지 경험을 제공한다고 함.
 - 작은 Aggregate 로 설계한다.
 - ID 로 다른 Aggregate 를 참조한다. Jpa 등을 사용하면 관련된 객체를 모두 참조할 수 있지만, 그렇게 하지 않고 경계 안에서만 직접 참조를 하고, 경계 밖에서는 ID를 통해 다른 Aggregate 를 참조하여 접근한다.
 - 경계 밖에서 결과적 일관성을 사용한다. 이를 위해 도메인 이벤트 등을 사용할 수 있다.
+
+## Repository
+
+- Repository는 Aggregate를 관리하는 컬렉션처럼 동작한다.
+- 이것은 아래와 같은 의미를 갖는데
+```
+1. 오직 Aggregate만 Repository를 갖는다.
+    - ex. order Aggregate를 만들어 경계안에 LineItem을 넣으면 이전에는 직접 접근이 가능하던 LineItem 이라는 엔티티는 접근할 수 없고, Order 라는 Aggregate를 통해서 접근 해야하며, LineItem Repository는 없게된다. 
+2. Repository는 영속화 방법 및 기술을 감춘다.
+```
+
+- Spring Data Jpa는 이 둘을 만족시키기 위한 기능을 갖추고 있고, Aggregate에 대한 Repository 를 만들어도 안정적으로 작동할 수 있도록 Cascade 옵션을 지원하고, orphanRemoval 과 같은 옵션도 존재한다.
+  - 그래서 Persistence Context를 통해 Collection 처럼 사용하는 것이 가능하다.
+
+- Repository는 사실상 전역으로 접근할 수 있어야 하는데, Spring을 사용하면 간단하게 DI를 활용해서 접근 가능하게 된다.
+- 따라서, 우리는 적절한 Aggregate를 발견하고, 적절히 책임을 나눌 수 있도록 Entity와 Value Object로 구선(또는 분해)하고, 이를 위한 Repository를 만듦으로써, 여러 기술 문제와 무관한 비즈니스 도메인에 집중할 수 있게 된다.
+  - 이렇게 비즈니스 도메인에 집중한 코드를 모아둔 곳을 `Domain Layer`라고 부르며, 
+  - Repository와 Aggregate를 사용하는 코드가 모인곳을 `Application Layer`(여기서는 애플리케이션의 기능, Use Case가 직접적으로 드러나게 된다.),
+    - Application Layer 안에는 Application Service가 존재함. (Domain Layer 에도 Domain Service가 존재)
+    - Application Layer에서는 Aggregate가 제공하는 인터페이스를 사용하도록 하고, 실제 구현된 내용들은 Aggregate에 작성 되어 있도록 함. 
+  - Web 등 구체적인 기술로 사용자와 소통하는 코드가 모인 곳을 `UI Layer`라고 부른다.
+- Layered Architecture 와 DDD가 함께 다뤄지는 이유이다. Layered Architecture 없이 도메인 모델을 Domain Layer에 분리하는 것은 불가능하다.
+
+- 결국, 유지보수하기 쉬운 소프트웨어를 만드는것이 목적이고, 응집도를 높이고, 결합도를 낮추는 것이 최종적인 목표가 되는것 같다.
+- 다른 레이어들도 중요하긴 하지만, 대부분은 실제 비즈니스 문제를 해결할 수 있는 도메인 레이어를 더 중요
+
